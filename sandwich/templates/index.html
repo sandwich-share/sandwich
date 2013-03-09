@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!DOCTYPE HTML>
 <html>
     <head>
         <title>Sandwich File Sharing</title>
@@ -10,8 +10,10 @@
     <body>
         <div id="controls" class="container">
             <form action="/query" id="query_form">
-                <input type="text" placeholder="Search...">
-                <input type="submit" value="Search">
+                <div class="input-append">
+                    <input type="text" placeholder="Search...">
+                    <input type="submit" value="Submit" class="btn">
+                </div>
             </form>
             <script>
                 $("#query_form").on("submit", function(e) {

@@ -1,7 +1,9 @@
 from flask import Flask
 from flask import Markup
 from flask import render_template
+from flask import request
 import os
+import json
 
 import indexer, config
 
@@ -13,7 +15,7 @@ def index():
 
 @app.route("/query", methods=["POST"])
 def query():
-    return render_template("query_result.html", index=indexer.index)
+    return render_template("query_result.html", index=json.loads(indexer.search(str(request.form.get("search")))))
 
 
 def run():

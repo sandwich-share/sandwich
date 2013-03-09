@@ -4,6 +4,7 @@ import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import indexer
+import config
 
 class SimpleEventHandler(FileSystemEventHandler):
     def on_created(self, event):
