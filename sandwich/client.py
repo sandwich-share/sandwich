@@ -29,5 +29,6 @@ class SandwichGetter(object):
         conn.request("GET", "/neighbors")
         r1 = conn.getresponse()
         config.neighbors.extend(json.loads(r1.read()))
+        config.neighbors.append(ip)
         config.neighbors = list(set(config.neighbors))
         conn.close()

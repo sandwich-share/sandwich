@@ -3,7 +3,7 @@ import Queue
 import time, json
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
-import config, files
+import config, files, client
 
 class StaticServeHandler(BaseHTTPRequestHandler):
 
@@ -15,6 +15,8 @@ class StaticServeHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(json.dumps(config.neighbors))
+            if not self.client_address[0] in config.neighbors:
+                client.bootstrap_into_network(self.client_address[0])
             return
 
         if "/files" == self.path[:len("/files")]:
