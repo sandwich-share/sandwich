@@ -8,7 +8,8 @@ shared_directory = config.shared_directory
 def find_files():
   for path, dirs, files in os.walk(shared_directory):
     for f in files:
-      add_file(path, directory, f)
+      if not f.startswith('.') and not os.path.split(path)[1].startswith('.'):
+        add_file(path, f)
   return index
 
 # add a file and folder to the index
