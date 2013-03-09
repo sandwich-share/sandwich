@@ -1,1 +1,1 @@
-shared_directory = "/Users/diegowaxemberg/Movies"
+shared_directory = "~/Movies"
