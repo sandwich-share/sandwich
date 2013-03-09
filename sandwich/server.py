@@ -1,5 +1,5 @@
 from os import curdir, sep, path
-import time
+import time, json
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 import config, files
@@ -7,6 +7,17 @@ import config, files
 class StaticServeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+
+        # yeah, I know it's shitty. it's also 4 in the morning, deal with it.
+        if "/neighbors" == self.path[:len("/neighbors")]:
+            self.wfile.write(json.dumps(config.neighbors))
+            return
+
+        if "/files" == self.path[:len("/files")]:
+            self.path = self.path[len("/files"):]
+        else:
+            self.send_error(404, 'Bad path. Sucks to suck.')
+            return
 
         if not config.shared_directory:
             self.send_error(404, 'User not sharing files')
