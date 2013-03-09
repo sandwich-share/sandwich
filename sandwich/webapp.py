@@ -29,7 +29,7 @@ def search():
         conn.close()
         for n in neighbors:
             conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
-            conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
+            conn.request("GET", "/query", urllib.urlencode({'search': request.args.get("search")}))
             y = conn.getresponse().read()
             print y
             x += y
@@ -37,7 +37,7 @@ def search():
 
     else:
         conn = httplib.HTTPConnection("%s:%d" % (request.args["host"], config.webapp))
-        conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
+        conn.request("GET", "/query", urllib.urlencode({'search': request.args.get("search")}))
         y = conn.getresponse().read()
         print y
         x += y
