@@ -10,7 +10,7 @@ setup(
   description = 'A little file sharing application.',
   author = 'HacSoc',
   author_email = 'hacsoc@case.edu',
-  url = 'https://github.com/hacsoc/hacKSU',
+  url = 'https://github.com/hacsoc/sandwich',
   long_description=open("README").read(),
   install_requires = [
   ],
