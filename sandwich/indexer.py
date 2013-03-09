@@ -13,7 +13,7 @@ def find_files():
     index = []
     for path, dirs, files in os.walk(shared_directory):
         for f in files:
-            if not f.startswith('.') and not os.path.split(path)[1].startswith('.'):
+            if not f.startswith('.') and (not os.path.split(path)[1].startswith('.') or path == './' or path == '.'):
               index.append((os.path.relpath(path, shared_directory), f))
     try:
         os.remove(db)
