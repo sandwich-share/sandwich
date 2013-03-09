@@ -1,6 +1,8 @@
 import os
+import config
+
 index = []
-shared_directory = CONFIG["shared_directory"]
+shared_directory = config.shared_directory
 
 # crawl a directory and find all files and folders
 def find_files():
