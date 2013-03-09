@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+  <head>
+    <title>Sandwich File Sharing</title>
+    <center><h1>Local Index</h1></center>
+    <style>
+      #index-table td {
+        padding: 2px 5px 2px 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="index_table">
+      <center>
+        <table border="1" id="index-table">
+          <tr>
+            <th>Path</th>
+            <th>Filename</th>
+          </tr>
+          {% for files in index %}
+          <tr>
+            <td>{{files[0]}}</td>
+            <td>{{files[1]}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </center>
+    </div>
+  </body>
+</html>
