@@ -65,7 +65,7 @@ def remove_file(path, filename):
         con.close()
 
 # finds a file with the given name in the database
-def search(search_param):
+def search(search_param, ip_address):
     try:
         con = sqlite3.connect(db)
         cursor = con.cursor()
@@ -73,7 +73,7 @@ def search(search_param):
         results = []
         search = '%' + str.replace(search_param, ' ', '%') + '%'
         for res in cursor.execute(cmd, (search, search)):
-            results.append(res + ('http://' + socket.gethostbyname(socket.gethostname()) + '/files/' + urllib.quote(res[0]) + '/' + urllib.quote(res[1]),))
+            results.append(res + ('http://' + ip_address  + '/files/' + urllib.quote(res[0]) + '/' + urllib.quote(res[1]),))
         return json.dumps(results)
     #http://myip:serverport/files/path/filename
     except:
