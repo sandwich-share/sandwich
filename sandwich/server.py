@@ -36,36 +36,29 @@ class StaticServeHandler(BaseHTTPRequestHandler):
             self.send_error(404,'File Not Found: %s' % self.path)
 
 
-class SandwichServer(object):
+def run(port, q=None):
+    try:
+        ss = HTTPServer(('', port), StaticServeHandler)
+        print 'started httpserver on port ', port
+        while True:
+            # update our state from the parent process
+            if q:
+                try:
+                    r = q.get(block=False)
+                    if r[0] == "shared_directory":
+                        config.shared_directory = r[1]
+                    elif r[0] == "neighbors":
+                        config.neighbors = r[1]
+                except Queue.Empty:
+                    pass
 
-    def __init__(self, ):
-        pass
-
-    def run(self, port, q=None):
-        try:
-            self.port = port
-            self.server = HTTPServer(('', self.port), StaticServeHandler)
-            print 'started httpserver...'
-            while True:
-                # update our state from the parent process
-                if q:
-                    try:
-                        r = q.get(block=False)
-                        if r[0] == "shared_directory":
-                            config.shared_directory = r[1]
-                        elif r[0] == "neighbors":
-                            config.neighbors = r[1]
-                    except Queue.Empty:
-                        pass
-
-                self.server.handle_request()
-        except KeyboardInterrupt:
-            print '^C received, shutting down server'
-            self.server.socket.close()
+            ss.handle_request()
+    except KeyboardInterrupt:
+        print '^C received, shutting down server'
+        ss.socket.close()
 
 
 
 if __name__ == '__main__':
-    ss = SandwichServer()
-    ss.run(8000)
+    run(8000)
 
