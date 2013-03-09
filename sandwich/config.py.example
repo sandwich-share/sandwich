@@ -1,6 +1,6 @@
 import os
 shared_directory = os.path.expanduser("~/Shared")
-neighbors = []
+neighbors = ["1.1.1.1","2.2.2.2"]
 chunk_size = 2**20
 debug = True
 serverport = 9000
