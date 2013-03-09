@@ -7,11 +7,9 @@ import json
 shared_directory = os.path.expanduser(config.shared_directory)
 db = "index.db"
 table = "local"
-index = []
 
 # crawl a directory and find all files and folders
 def find_files():
-    global index
     index = []
     for path, dirs, files in os.walk(shared_directory):
         for f in files:
