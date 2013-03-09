@@ -5,7 +5,7 @@ import httplib
 import urllib
 import re
 
-import indexer, config
+import indexer, config, async
 
 app = Flask('webapp', template_folder=os.getcwd() + "/templates")
 
@@ -17,21 +17,35 @@ def index():
 def query():
     return indexer.search(str(request.args.get("search")))
 
+@app.route("/neighbors", methods=['GET'])
+def neighbors():
+    print config.neighbors
+    print request.remote_addr
+    if not request.remote_addr in config.neighbors:
+        async.event.asynchronous_callback(
+            client.SandwichGetter.bootstrap_into_network,
+            (request.remote_addr))
+    return json.dumps(config.neighbors)
+
 @app.route("/search", methods=["GET"])
 def search():
     x = ""
     if not request.args.get("host"):
-        conn = httplib.HTTPConnection("localhost:%d" % config.serverport, timeout=config.timeout)
+        conn = httplib.HTTPConnection("localhost:%d" % config.serverport,
+                                      timeout=config.timeout)
         conn.request("GET", "/neighbors")
         neighbors = json.loads(conn.getresponse().read())
         conn.close()
         for n in neighbors:
-            conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp), timeout=config.timeout)
-            conn.request("GET", "/query", urllib.urlencode({'search': request.args.get("search")}))
+            conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp),
+                                          timeout=config.timeout)
+            conn.request("GET", "/query",
+                         urllib.urlencode({'search': request.args.get("search")}))
             x = conn.getresponse().read()
             conn.close()
     else:
-        conn = httplib.HTTPConnection("%s:%d" % (request.args.get("host"), config.webapp), timeout=config.timeout)
+        conn = httplib.HTTPConnection("%s:%d" % (request.args.get("host"),
+                                                 config.webapp), timeout=config.timeout)
         conn.request("GET", "/query", urllib.urlencode({'search': ""}))
         x = conn.getresponse().read()
         conn.close()
@@ -45,11 +59,15 @@ def neighbors():
     conn.close()
     return ret
 
+
 def run():
+
     app.debug = config.debug
     # flask is dumb and tries to restart infinitely if we fork it into a subprocess.
     # this is bad. So we disable it, and hate on flask a bit.
     app.run(port=config.webapp, use_reloader=False, host='0.0.0.0')
+
+
 
 if __name__ == '__main__':
     app.debug = True
