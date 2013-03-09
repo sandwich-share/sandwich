@@ -31,13 +31,7 @@ def neighbors():
 def search():
     x = ""
     if not request.args.get("host"):
-        conn = httplib.HTTPConnection("localhost:%d" % config.serverport,
-                                      timeout=config.timeout)
-
-        conn.request("GET", "/neighbors")
-        neighbors = json.loads(conn.getresponse().read())
-        conn.close()
-        for n in neighbors:
+        for n in config.neighbors:
             conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp),
                                           timeout=config.timeout)
             conn.request("GET", "/query",
@@ -53,23 +47,12 @@ def search():
         conn.close()
     return x
 
-@app.route("/neighbors")
-def neighbors():
-    conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
-    conn.request("GET", "/neighbors")
-    ret = conn.getresponse().read()
-    conn.close()
-    return ret
-
-
 def run():
 
     app.debug = config.debug
     # flask is dumb and tries to restart infinitely if we fork it into a subprocess.
     # this is bad. So we disable it, and hate on flask a bit.
     app.run(port=config.webapp, use_reloader=False, host='0.0.0.0')
-
-
 
 if __name__ == '__main__':
     app.debug = True
