@@ -2,7 +2,7 @@ from os import curdir, sep, path
 import time
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
-import config
+import config, files
 
 class StaticServeHandler(BaseHTTPRequestHandler):
 
@@ -13,11 +13,11 @@ class StaticServeHandler(BaseHTTPRequestHandler):
             return
 
         try:
-            f = open(path.expanduser(config.shared_directory) + self.path, 'rb')
-            self.send_response(200)
-            self.end_headers()
-            self.wfile.write(f.read())
-            f.close()
+            handle = path.expanduser(config.shared_directory) + self.path
+            with open(handle, 'rb') as f:
+                self.send_response(200)
+                self.end_headers()
+                files.stream_file(f, self.wfile)
             return
 
         except IOError:
