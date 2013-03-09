@@ -53,10 +53,11 @@ def neighbors():
     return ret
 
 def run():
+    app.debug = config.debug
     # flask is dumb and tries to restart infinitely if we fork it into a subprocess.
     # this is bad. So we disable it, and hate on flask a bit.
     app.run(port=config.webapp, use_reloader=False, host='0.0.0.0')
 
 if __name__ == '__main__':
-    app.debug = config.debug
+    app.debug = True
     app.run()
