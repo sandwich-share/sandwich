@@ -15,8 +15,9 @@ class StaticServeHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(json.dumps(config.neighbors))
+            print self.client_address[0]
             if not self.client_address[0] in config.neighbors:
-                client.bootstrap_into_network(self.client_address[0])
+                client.SandwichGetter.bootstrap_into_network(self.client_address[0])
             return
 
         if "/files" == self.path[:len("/files")]:
