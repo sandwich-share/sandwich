@@ -3,6 +3,7 @@ import os
 import json
 import httplib
 import urllib
+import re
 
 import indexer, config
 
@@ -12,12 +13,11 @@ app = Flask('webapp', template_folder=os.getcwd() + "/templates")
 def index():
     return render_template("index.html")
 
-@app.route("/query", methods=["POST"])
+@app.route("/query", methods=["GET"])
 def query():
-    print request.form
-    return indexer.search(str(request.form.get("search")))
+    return indexer.search(re.match("search=(.*)", request.data).group(1))
 
-@app.route("/search", methods=["POST"])
+@app.route("/search", methods=["GET"])
 def search():
     conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
     conn.request("GET", "/neighbors")
@@ -26,7 +26,7 @@ def search():
     x = ""
     for n in neighbors:
         conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
-        conn.request("POST", "/query", urllib.urlencode({'search': request.form.get("search")}))
+        conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
         y = conn.getresponse().read()
         print y
         x += y
