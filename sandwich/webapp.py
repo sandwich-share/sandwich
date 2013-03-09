@@ -16,9 +16,11 @@ def index():
 @app.route("/query", methods=["GET"])
 def query():
     print request.data
-    x = re.match("(^|&)search=(.*)(&|$)", request.data)
-    y = re.match("(^|&)ip=(.*)(&|$)", request.data)
-    return indexer.search(x.group(1), y.group(1))
+    x = {}
+    for i in request.data.split("&"):
+        k,v = i.spit("=")
+        x[k]=v
+    return indexer.search(x["search"], x["ip"])
 
 @app.route("/neighbors", methods=['GET'])
 def neighbors():
