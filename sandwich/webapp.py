@@ -15,7 +15,7 @@ def index():
 
 @app.route("/query", methods=["GET"])
 def query():
-    return indexer.search(re.match("search=(.*)", request.data).group(1))
+    return indexer.search(re.match("search=(.*)", request.data).group(1), request.remote_addr)
 
 @app.route("/neighbors", methods=['GET'])
 def neighbors():
