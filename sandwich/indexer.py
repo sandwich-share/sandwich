@@ -1,3 +1,5 @@
+import urllib
+import socket
 import sys
 import os
 import config
@@ -71,8 +73,9 @@ def search(search_param):
         results = []
         search = '%' + str.replace(search_param, ' ', '%') + '%'
         for res in cursor.execute(cmd, (search, search)):
-            results.append(res)
+            results.append(res + ('http://' + socket.gethostbyname(socket.gethostname()) + '/files/' + urllib.quote(res[0]) + '/' + urllib.quote(res[1]),))
         return json.dumps(results)
+    #http://myip:serverport/files/path/filename
     except:
         for m in sys.exc_info():
             print m

@@ -15,7 +15,7 @@ def index():
 
 @app.route("/query", methods=["GET"])
 def query():
-    return indexer.search(str(request.args.get("search")))
+    return indexer.search(re.match("search=(.*)", request.data).group(1))
 
 @app.route("/neighbors", methods=['GET'])
 def neighbors():
@@ -33,6 +33,7 @@ def search():
     if not request.args.get("host"):
         conn = httplib.HTTPConnection("localhost:%d" % config.serverport,
                                       timeout=config.timeout)
+
         conn.request("GET", "/neighbors")
         neighbors = json.loads(conn.getresponse().read())
         conn.close()
@@ -46,6 +47,7 @@ def search():
     else:
         conn = httplib.HTTPConnection("%s:%d" % (request.args.get("host"),
                                                  config.webapp), timeout=config.timeout)
+
         conn.request("GET", "/query", urllib.urlencode({'search': ""}))
         x = conn.getresponse().read()
         conn.close()
