@@ -14,6 +14,7 @@ def index():
 
 @app.route("/query", methods=["POST"])
 def query():
+    print request.form
     return indexer.search(str(request.form.get("search")))
 
 @app.route("/search", methods=["POST"])
@@ -21,18 +22,24 @@ def search():
     conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
     conn.request("GET", "/neighbors")
     neighbors = json.loads(conn.getresponse().read())
+    conn.close()
     x = ""
     for n in neighbors:
         conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
         conn.request("POST", "/query", urllib.urlencode({'search': request.form.get("search")}))
-        x += conn.getresponse().read()
+        y = conn.getresponse().read()
+        print y
+        x += y
+        conn.close()
     return x
 
 @app.route("/neighbors")
 def neighbors():
     conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
     conn.request("GET", "/neighbors")
-    return conn.getresponse().read()
+    ret = conn.getresponse().read()
+    conn.close()
+    return ret
 
 def run():
     app.debug = config.debug

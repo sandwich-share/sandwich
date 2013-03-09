@@ -6,9 +6,4 @@ $(document).ready(function(){
                 $("#content").html(data);
             });
     })
-    setInterval(function(){
-        $.get("localhost:9000/neighbours", function(data){
-          $("#neighbours").html(data);
-        })
-    }, 5000)
 })
