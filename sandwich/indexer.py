@@ -1,30 +1,17 @@
-import sqlite3 as lite
 import os
+index = []
 
-con = None
-
-
+# crawl a directory and find all files and folders
 def find_files(directory):
-  index = []
   for path, dirs, files in os.walk(directory):
     for f in files:
-      fixed_path = path[path.find(directory)+len(directory)::]
-      index.append([fixed_path, f])
-  print "index: ", index
+      add_file(path, directory, f)
+  return index
 
+# add a file and folder to the index
+def add_file(path, shared_directory, filename):
+  index.append((os.path.relpath(path, shared_directory), filename))
 
-def create_db():
-  try:
-    with open('filename') as f: pass
-  except IOError as e:
-
-  try:
-    lite.connect('ps.db')
-    cursor = con.cursor()
-  except:
-    print "An Sqlite3 exception has occured."
-  finally:
-    if con:
-      con.close()
-
-
+# remove a file from the index
+def remove_file(path, filename):
+  index.remove((path, filename))
