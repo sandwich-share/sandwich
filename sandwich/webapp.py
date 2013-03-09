@@ -28,6 +28,7 @@ def search():
         neighbors = json.loads(conn.getresponse().read())
         conn.close()
         for n in neighbors:
+            print "here"
             conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp), timeout=config.timeout)
             conn.request("GET", "/query", urllib.urlencode({'search': request.args.get("search")}))
             x += conn.getresponse().read()
