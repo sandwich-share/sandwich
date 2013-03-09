@@ -18,7 +18,7 @@ def query():
     print request.data
     x = {}
     for i in request.data.split("&"):
-        k,v = i.spit("=")
+        k,v = i.split("=")
         x[k]=v
     return indexer.search(x["search"], x["ip"])
 
