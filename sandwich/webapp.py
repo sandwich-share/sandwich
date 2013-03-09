@@ -24,10 +24,15 @@ def search():
     if not request.args.get("host"):
         print 2
         conn = httplib.HTTPConnection("localhost:%d" % config.serverport, timeout=config.timeout)
+        print 4
         conn.request("GET", "/neighbors")
+        print 5
         neighbors = json.loads(conn.getresponse().read())
+        print 6
         conn.close()
+        print 7
         for n in neighbors:
+            print 8
             conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp), timeout=config.timeout)
             conn.request("GET", "/query", urllib.urlencode({'search': request.args.get("search")}))
             x += conn.getresponse().read()

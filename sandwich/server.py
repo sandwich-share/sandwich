@@ -5,6 +5,8 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 import config, files, client
 
+bootstrap = None
+
 class StaticServeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -16,8 +18,10 @@ class StaticServeHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(config.neighbors))
             print self.client_address[0]
+            global bootstrap
             if not self.client_address[0] in config.neighbors:
-                client.SandwichGetter.bootstrap_into_network(self.client_address[0])
+                print "bootstrapping peer"
+                bootstrap = self
             return
 
         if "/files" == self.path[:len("/files")]:
@@ -59,6 +63,13 @@ def run(port, q=None):
                     pass
 
             ss.handle_request()
+            
+            global bootstrap
+            if bootstrap != None:
+               client.SandwichGetter.bootstrap_into_network(bootstrap.client_address[0])
+               print "Bootstrapped peer"
+               bootstrap = None
+
     except KeyboardInterrupt:
         print '^C received, shutting down server'
         ss.socket.close()
