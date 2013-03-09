@@ -1,7 +1,7 @@
+import config
 
 def stream_file(fin, fout):
-    CHUNK_SIZE = 2**20
     while True:
-        chunk = fin.read(CHUNK_SIZE)
+        chunk = fin.read(config.chunk_size)
         if not chunk: break
         fout.write(chunk)
