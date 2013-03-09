@@ -1,21 +1,20 @@
+import sys
 import os
 import config
 import sqlite3
+import json
 
-index = []
 shared_directory = os.path.expanduser(config.shared_directory)
 db = "index.db"
 table = "local"
 
 # crawl a directory and find all files and folders
 def find_files():
-    global index
     index = []
     for path, dirs, files in os.walk(shared_directory):
         for f in files:
             if not f.startswith('.') and not os.path.split(path)[1].startswith('.'):
               index.append((os.path.relpath(path, shared_directory), f))
-    config.index = index
     try:
         os.remove(db)
     except:
@@ -30,45 +29,52 @@ def find_files():
         cursor.executemany("INSERT INTO " + table + "  VALUES (?,?)", index)
         con.commit()
     except:
-        print "Sqlite3 Error!"
+        for m in sys.exc_info():
+            print m
     finally:
         con.close()
 
 # add a file and folder to the index
 def add_file(path, filename):
-    index.append((os.path.relpath(path, shared_directory), filename))
-    config.index = index
     try:
         con = sqlite3.connect(db)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO " + table + " VALUES ('" + os.path.relpath(path, shared_directory) + "','" + filename + "')")
+        cmd = "INSERT INTO " + table + " VALUES (?,?)"
+        cursor.execute(cmd, (path, filename))
         con.commit()
     except:
-        print "Sqlite3 Error: Cannot insert values!"
+        for m in sys.exc_info():
+            print m
     finally:
         con.close()
 
 # remove a file from the index
 def remove_file(path, filename):
-    index.remove((path, filename))
-    config.index = index
     try:
         con = sqlite3.connect(db)
         cursor = con.cursor()
-        cursor.execute("DELETE FROM " + table + "  WHERE 'path=" + path + "' AND 'filename=" + filename + "'")
+        cmd = "DELETE FROM " + table + " WHERE path=? AND filename=?"
+        cursor.execute(cmd, (path, filename))
         con.commit()
     except:
-        print "SQlite3 Error: Cannot delete values!"
+        for m in sys.exc_info():
+             print m
     finally:
         con.close()
 
 # finds a file with the given name in the database
-def search_file(filename):
+def search(search_param):
     try:
         con = sqlite3.connect(db)
         cursor = con.cursor()
-        cursor.execute("SELECT * FROM " + table + " WHERE filename='" + filename + "'")
+        cmd = "SELECT * FROM " + table + " WHERE path LIKE ? OR filename LIKE ?"
+        results = []
+        search = '%' + str.replace(search_param, ' ', '%') + '%'
+        for res in cursor.execute(cmd, (search, search)):
+            results.append(res)
+        return json.dumps(results)
     except:
-        print "SQlite3 Error: Cannot select from table!"
+        for m in sys.exc_info():
+            print m
     finally:
         con.close()
