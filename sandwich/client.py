@@ -7,7 +7,7 @@ class SandwichGetter(object):
 
     @classmethod
     def get_res(cls, ip, res):
-        conn = httplib.HTTPConnection(ip)
+        conn = httplib.HTTPConnection(ip, timeout=config.timeout)
         conn.request("GET", res)
         r1 = conn.getresponse()
         #TODO There should totally be error handling here
@@ -25,7 +25,7 @@ class SandwichGetter(object):
 
     @classmethod
     def bootstrap_into_network(cls, ip):
-        conn = httplib.HTTPConnection("%s:%d" % (ip, config.serverport))
+        conn = httplib.HTTPConnection("%s:%d" % (ip, config.serverport), timeout=config.timeout)
         conn.request("GET", "/neighbors")
         r1 = conn.getresponse()
         config.neighbors.extend(json.loads(r1.read()))

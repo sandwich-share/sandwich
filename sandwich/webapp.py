@@ -23,12 +23,12 @@ def search():
     x = ""
 
     if not request.args["host"]:
-        conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
+        conn = httplib.HTTPConnection("localhost:%d" % config.serverport, timeout=config.timeout)
         conn.request("GET", "/neighbors")
         neighbors = json.loads(conn.getresponse().read())
         conn.close()
         for n in neighbors:
-            conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
+            conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp), timeout=config.timeout)
             conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
             y = conn.getresponse().read()
             print y
@@ -36,7 +36,7 @@ def search():
             conn.close()
 
     else:
-        conn = httplib.HTTPConnection("%s:%d" % (request.args["host"], config.webapp))
+        conn = httplib.HTTPConnection("%s:%d" % (request.args["host"], config.webapp), timeout=config.timeout)
         conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
         y = conn.getresponse().read()
         print y
