@@ -1,0 +1,12 @@
+<table class='table'>
+    <tr>
+        <th>Path</th>
+        <th>Filename</th>
+    </tr>
+    {% for files in index %}
+    <tr>
+        <td>{{files[0]}}</td>
+        <td>{{files[1]}}</td>
+    </tr>
+    {% endfor %}
+</table>
