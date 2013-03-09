@@ -11,6 +11,8 @@ class StaticServeHandler(BaseHTTPRequestHandler):
 
         # yeah, I know it's shitty. it's also 4 in the morning, deal with it.
         if "/neighbors" == self.path[:len("/neighbors")]:
+            self.send_response(200)
+            self.end_headers()
             self.wfile.write(json.dumps(config.neighbors))
             return
 
