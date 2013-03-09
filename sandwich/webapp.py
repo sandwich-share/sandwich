@@ -5,7 +5,7 @@ import httplib
 import urllib
 import re
 
-import indexer, config, async
+import indexer, config, async, client
 
 app = Flask('webapp', template_folder=os.getcwd() + "/templates")
 
