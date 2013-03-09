@@ -1,4 +1,5 @@
 from os import curdir, sep, path
+import Queue
 import time, json
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
@@ -40,12 +41,24 @@ class SandwichServer(object):
     def __init__(self, ):
         pass
 
-    def run(self, port):
+    def run(self, port, q=None):
         try:
             self.port = port
             self.server = HTTPServer(('', self.port), StaticServeHandler)
             print 'started httpserver...'
-            self.server.serve_forever()
+            while True:
+                # update our state from the parent process
+                if q:
+                    try:
+                        r = q.get(block=False)
+                        if r[0] == "shared_directory":
+                            config.shared_directory = r[1]
+                        elif r[0] == "neighbors":
+                            config.neighbors = r[1]
+                    except Queue.Empty:
+                        pass
+
+                self.server.handle_request()
         except KeyboardInterrupt:
             print '^C received, shutting down server'
             self.server.socket.close()

@@ -13,6 +13,8 @@ setup(
   url = 'https://github.com/hacsoc/sandwich',
   long_description=open("README").read(),
   install_requires = [
+    'watchdog',
+    'flask',
   ],
   license = 'BSD',
   classifiers = [
