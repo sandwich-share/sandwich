@@ -1,0 +1,1 @@
+shared_directory = "~/Shared"
