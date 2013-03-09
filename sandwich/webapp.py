@@ -11,7 +11,7 @@ app = Flask('webapp', template_folder=os.getcwd() + "/templates")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", peers=config.neighbors, port=config.webapp)
 
 @app.route("/query", methods=["GET"])
 def query():
@@ -19,13 +19,24 @@ def query():
 
 @app.route("/search", methods=["GET"])
 def search():
-    conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
-    conn.request("GET", "/neighbors")
-    neighbors = json.loads(conn.getresponse().read())
-    conn.close()
+
     x = ""
-    for n in neighbors:
-        conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
+
+    if not request.args["host"]:
+        conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
+        conn.request("GET", "/neighbors")
+        neighbors = json.loads(conn.getresponse().read())
+        conn.close()
+        for n in neighbors:
+            conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
+            conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
+            y = conn.getresponse().read()
+            print y
+            x += y
+            conn.close()
+
+    else:
+        conn = httplib.HTTPConnection("%s:%d" % (request.args["host"], config.webapp))
         conn.request("GET", "/query", urllib.urlencode({'search': request.form.get("search")}))
         y = conn.getresponse().read()
         print y

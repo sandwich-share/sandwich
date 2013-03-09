@@ -21,5 +21,20 @@
         </div>
         <div id="content" class="container">
         </div>
+        <div id="peer-list" class="container">
+          <table class='table'>
+            <tr>
+              <th>Peers</th>
+            </tr>
+            {% for peer in peers %}
+            <tr>
+              <td>
+                <a href="http://localhost:{{port}}/search?host={{peer}}">
+                  {{peer}}
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+        </div>
     </body>
 </html>
