@@ -1,12 +1,12 @@
 from multiprocessing import Process, Queue
 
-import server, indexer, file_monitor, webapp, config
+import server, indexer, file_monitor, webapp, config, client
 
 def run_all():
 
 
     if (len(config.neighbors) > 0):
-        client.SandwichGetter.bootstrap_into_network(config.neighbors[1])
+        client.SandwichGetter.bootstrap_into_network(config.neighbors[0])
 
     q = Queue()
 

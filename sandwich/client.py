@@ -6,7 +6,7 @@ import config, files
 class SandwichGetter(object):
 
     @classmethod
-    def get_res(ip, res):
+    def get_res(cls, ip, res):
         conn = httplib.HTTPConnection(ip)
         conn.request("GET", res)
         r1 = conn.getresponse()
@@ -18,14 +18,14 @@ class SandwichGetter(object):
         conn.close()
 
     @classmethod
-    def get_many_res(ip, reses):
+    def get_many_res(cls, ip, reses):
         for res in reses:
-            self.get_res(ip, res)
+            self.get_res(cls, ip, res)
 
 
     @classmethod
-    def bootstrap_into_network(ip):
-        conn = httplib.HTTPConnection(ip)
+    def bootstrap_into_network(cls, ip):
+        conn = httplib.HTTPConnection("%s:%d" % (ip, config.serverport))
         conn.request("GET", "/neighbors")
         r1 = conn.getresponse()
         config.neighbors.extend(json.loads(r1.read()))

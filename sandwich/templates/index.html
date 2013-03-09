@@ -2,28 +2,22 @@
 <html>
     <head>
         <title>Sandwich File Sharing</title>
-        <center><h1>Local Index</h1></center>
         <script type="text/javascript" src="/static/js/jquery.js"></script>
+        <script type="text/javascript" src="/static/js/custom.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="/static/css/custom.css">
     </head>
     <body>
+        <h1>Local Index</h1>
         <div id="controls" class="container">
-            <form action="/query" id="query_form">
+            <form action="/search" id="query_form">
                 <div class="input-append">
                     <input type="text" placeholder="Search...">
                     <input type="submit" value="Submit" class="btn">
                 </div>
             </form>
-            <script>
-                $("#query_form").on("submit", function(e) {
-                        e.preventDefault();
-                        $.post($(this).attr('action'), {search:
-                            $(this).find("input[type=text]").val()}, function(data){
-                                $("#content").html(data);
-                        });
-                })
-            </script>
+        </div>
+        <div id="neighbours" class="container">
         </div>
         <div id="content" class="container">
         </div>

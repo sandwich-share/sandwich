@@ -1,9 +1,8 @@
-from flask import Flask
-from flask import Markup
-from flask import render_template
-from flask import request
+from flask import Flask, Markup, render_template, request
 import os
 import json
+import httplib
+import urllib
 
 import indexer, config
 
@@ -15,8 +14,25 @@ def index():
 
 @app.route("/query", methods=["POST"])
 def query():
-    return render_template("query_result.html", index=json.loads(indexer.search(str(request.form.get("search")))))
+    return indexer.search(str(request.form.get("search")))
 
+@app.route("/search", methods=["POST"])
+def search():
+    conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
+    conn.request("GET", "/neighbors")
+    neighbors = json.loads(conn.getresponse().read())
+    x = ""
+    for n in neighbors:
+        conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp))
+        conn.request("POST", "/query", urllib.urlencode({'search': request.form.get("search")}))
+        x += conn.getresponse().read()
+    return x
+
+@app.route("/neighbors")
+def neighbors():
+    conn = httplib.HTTPConnection("localhost:%d" % config.serverport)
+    conn.request("GET", "/neighbors")
+    return conn.getresponse().read()
 
 def run():
     app.debug = config.debug
