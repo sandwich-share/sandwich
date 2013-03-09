@@ -6,7 +6,7 @@ shared_directory = config.shared_directory
 
 # crawl a directory and find all files and folders
 def find_files():
-  for path, dirs, files in os.walk(shared_directory):
+  for path, dirs, files in os.walk(os.path.expanduser(shared_directory)):
     for f in files:
       if not f.startswith('.') and not os.path.split(path)[1].startswith('.'):
         add_file(path, f)
