@@ -1,0 +1,14 @@
+Sandwich
+======
+
+A little distributed file share application.
+
+Installation
+------------
+Setup a virtualenv and activate it.
+
+Then `pip install -e .` from the top level of the project that contains setup.py
+
+Running
+-------
+`sandwich/sandwich` will start a client.
