@@ -45,7 +45,7 @@ def files(filepath):
     if not os.path.isfile(config.shared_directory + os.sep + filepath):
         return "That file doesn't exist. Have a blank page instead.", 404
     def download():
-        with open(config.shared_directory + os.sep + filepath) as f:
+        with open(config.shared_directory + os.sep + filepath, "rb") as f:
             while True:
                 block = f.read(config.chunk_size)
                 if not block: break
