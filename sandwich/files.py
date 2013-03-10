@@ -10,8 +10,8 @@ def stream_file(fin, fout, size):
             fout.write(chunk)
             num_blocks += 1
             if (num_blocks * config.chunk_size / (2**20)) % 10 == 0:
-                print "Downloaded: %d MiB of %d MiB" % (num_blocks * config.chunk_size / (2**20)) % size
-        print "Download Finished!"    
+                print "Downloaded: %d MiB of %s" % ((num_blocks * config.chunk_size / (2**20)), size)
+        print "Download Finished!"
     except IOError as e:
         print sys.exc_info()
         return None
