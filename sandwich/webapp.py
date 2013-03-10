@@ -4,6 +4,7 @@ import json
 import httplib
 import urllib
 import re
+import socket
 
 import indexer, config, async, client
 
@@ -36,6 +37,7 @@ def neighbors():
 def search():
     x = []
     try:
+        conn = None
         if not request.args.get("host"):
             for n in config.neighbors:
                 conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp),
@@ -44,15 +46,18 @@ def search():
                         urllib.urlencode({'search': request.args.get("search"), 'ip': n}))
                 x += json.loads(conn.getresponse().read())
                 conn.close()
+                conn = None
         else:
             conn = httplib.HTTPConnection("%s:%d" % (request.args.get("host"),
                                                     config.webapp), timeout=config.timeout)
 
             conn.request("GET", "/query", urllib.urlencode({'search': "", 'ip': request.args.get("host")}))
             x += json.loads(conn.getresponse().read())
-            conn.close()
     except socket.error:
         print "Search failed"
+        
+    if conn != None:
+        conn.close()
 
     return render_template("query_result.html", index=x)
 
