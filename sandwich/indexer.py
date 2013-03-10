@@ -73,7 +73,7 @@ def search(search_param, ip_address):
         results = []
         search = '%' + str.replace(search_param, ' ', '%') + '%'
         for res in cursor.execute(cmd, (search, search)):
-            results.append(res + ('http://' + ip_address  + '/files/' + urllib.quote(res[0]) + '/' + urllib.quote(res[1]),))
+            results.append(res + ('http://' + ip_address  + '/files/' + str.replace(str(urllib.quote(res[0])) + '/', './', '') + urllib.quote(res[1]),))
         return json.dumps(results)
     #http://myip:serverport/files/path/filename
     except:
