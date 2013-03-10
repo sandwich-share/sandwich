@@ -1,4 +1,4 @@
-from flask import Flask, Markup, render_template, request
+from flask import Flask, Markup, render_template, request, Response
 import os
 import json
 import httplib
@@ -31,6 +31,27 @@ def neighbors():
             client.SandwichGetter.bootstrap_into_network,
             (request.remote_addr))
     return json.dumps(config.neighbors)
+
+
+@app.route("/files/<filepath>")
+def files(filepath):
+    # scary bad things can happen here if the bad people do the bad things
+    # to the filepath. Let's try and avoid that.
+    if filepath[0] in ['.', '/', '\\','~']:
+        return "Your filepath was bad, and you should feel bad."
+
+    if not os.path.isfile(config.shared_directory + os.sep + filepath):
+        return "That file doesn't exist. Have a blank page instead.", 404
+    def download():
+        print filepath
+        with open(config.shared_directory + os.sep + filepath) as f:
+            while True:
+                block = f.read(config.chunk_size)
+                if not block: break
+                yield block
+    return Response(download(), direct_passthrough=True)
+
+
 
 @app.route("/search", methods=["GET"])
 def search():

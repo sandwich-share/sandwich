@@ -31,4 +31,5 @@ class SandwichGetter(object):
         config.neighbors.extend(json.loads(r1.read()))
         config.neighbors.append(ip)
         config.neighbors = list(set(config.neighbors))
+        print config.neighbors
         conn.close()
