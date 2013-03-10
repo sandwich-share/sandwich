@@ -17,7 +17,7 @@ $(document).ready(function(){
     })
     x = function(){ $(".dl-link").on("click", function(e) {
         e.preventDefault();
-        $.get("/download", {url: $(this).attr("data-url")});
+        $.get("/download", {url: $(this).attr("data-url"), size: $(this).attr("data-size")});
     })}
     $("#content").on("change", x);
 })
