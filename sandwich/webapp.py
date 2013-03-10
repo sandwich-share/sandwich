@@ -5,7 +5,7 @@ import httplib
 import urllib
 import re
 import socket
-
+import sys
 import indexer, config, async, client
 
 app = Flask('webapp', template_folder=os.getcwd() + "/templates")
@@ -76,7 +76,9 @@ def search():
             x += json.loads(conn.getresponse().read())
     except socket.error:
         print "Search failed"
-        
+        if config.debug:
+            print str(sys.exc_info())
+
     if conn != None:
         conn.close()
 
