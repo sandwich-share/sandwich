@@ -42,11 +42,15 @@ def files(filepath):
     if filepath[0] in ['.', '/', '\\','~']:
         return "Your filepath was bad, and you should feel bad."
 
-    if not os.path.isfile(config.shared_directory + os.sep + filepath):
+    full_filepath = config.shared_directory + os.sep + filepath
+
+    if not os.path.isfile(full_filepath):
         return "That file doesn't exist. Have a blank page instead.", 404
 
+    cl = os.path.getsize(full_filepath)
+
     def download():
-        with open(config.shared_directory + os.sep + filepath, "rb") as f:
+        with open(full_filepath, "rb") as f:
             while True:
                 block = f.read(config.chunk_size)
                 if not block: break
@@ -54,6 +58,7 @@ def files(filepath):
 
     response = Response(download(), direct_passthrough=True)
     response.headers["Content-Type"] = "application/octet-stream"
+    response.headers["Content-Length"] = cl
     return response
 
 
