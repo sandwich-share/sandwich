@@ -1,5 +1,6 @@
 import httplib, json
 import config, files
+import socket
 
 
 class SandwichGetter(object):
@@ -7,6 +8,7 @@ class SandwichGetter(object):
     @classmethod
     def get_res(cls, ip, res):
 
+        conn = None
         try:
             conn = httplib.HTTPConnection(ip, timeout=config.timeout)
             conn.request("GET", res)
@@ -17,11 +19,12 @@ class SandwichGetter(object):
                 print "Not overwriting existing file"
             else:
                 with open(fullpath, 'wb') as f:
-                    files.stream_file(r1, f)
+                     files.stream_file(r1, f)
+        except:
+            print "Error while downloading file"
 
+        if conn != None:
             conn.close()
-        except socket.error:
-            print "Socket error while downloading"
 
     @classmethod
     def get_many_res(cls, ip, reses):
@@ -31,6 +34,7 @@ class SandwichGetter(object):
 
     @classmethod
     def bootstrap_into_network(cls, ip):
+        conn = None
         try:
             conn = httplib.HTTPConnection("%s:%d" % (ip, config.serverport), timeout=config.timeout)
             conn.request("GET", "/neighbors")
@@ -38,7 +42,9 @@ class SandwichGetter(object):
             config.neighbors.extend(json.loads(r1.read()))
             config.neighbors.append(ip)
             config.neighbors = list(set(config.neighbors))
-            conn.close()
-        except socket.error:
+        except:
             print "Error bootstrapping to %s:%d" % (ip, config.serverport)
+
+        if conn != None:
+            conn.close()
 
