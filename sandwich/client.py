@@ -18,7 +18,7 @@ class SandwichGetter(object):
             if path.exists(fullpath):
                 print "Not overwriting existing file"
             else:
-                with open(fullpath, 'wb') as f:
+                with open(fullpath, "wb") as f:
                      files.stream_file(r1, f)
         except:
             print "Error while downloading file"
