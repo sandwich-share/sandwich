@@ -4,7 +4,6 @@ import threading, Queue, sys
 class AsyncHandler(object):
 
     def __init__(self):
-        self.finished = threading.Event()
         self.semaphore = threading.Semaphore(0)
         self.events = Queue.Queue()
         self.thread = threading.Thread(target=self.event_handler)
@@ -28,7 +27,6 @@ class AsyncHandler(object):
             e[0](e[1])
 
     def stop_thread(self):
-        self.finished.set()
         sys.exit(0) 
 
 # globally available async queue (per import)
