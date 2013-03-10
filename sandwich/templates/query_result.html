@@ -6,8 +6,7 @@
     {% for files in index %}
     <tr>
         <td>{{files[0]}}</td>
-        <td>{{files[1]}}</td>
-        <td>{{files[2]}}</td>
+        <td><a href="{{files[2]}}">{{files[1]}}</a></td>
     </tr>
     {% endfor %}
 </table>

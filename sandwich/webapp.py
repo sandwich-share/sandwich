@@ -57,30 +57,37 @@ def files(filepath):
 @app.route("/search", methods=["GET"])
 def search():
     x = []
-    try:
-        conn = None
-        if not request.args.get("host"):
-            for n in config.neighbors:
+    if not request.args.get("host"):
+        for n in config.neighbors:
+            conn = None
+            try:
                 conn = httplib.HTTPConnection("%s:%d" % (n, config.webapp),
                                             timeout=config.timeout)
                 conn.request("GET", "/query",
                         urllib.urlencode({'search': request.args.get("search"), 'ip': n}))
                 x += json.loads(conn.getresponse().read())
+            except socket.error:
+                print "Search failed on %s:%d" % (n, config.webapp)
+                if config.debug:
+                    print str(sys.exc_info())
+                    
+            if conn != None:
                 conn.close()
-                conn = None
-        else:
+    else:
+        conn = None
+        try:
             conn = httplib.HTTPConnection("%s:%d" % (request.args.get("host"),
                                                     config.webapp), timeout=config.timeout)
 
             conn.request("GET", "/query", urllib.urlencode({'search': "", 'ip': request.args.get("host")}))
             x += json.loads(conn.getresponse().read())
-    except socket.error:
-        print "Search failed"
-        if config.debug:
-            print str(sys.exc_info())
-
-    if conn != None:
-        conn.close()
+        except socket.error:
+            print "Search failed on %s:%d" % ((request.args.get("host"), config.webapp))
+            if config.debug:
+                print str(sys.exc_info())
+                
+        if conn != None:
+            conn.close()
 
     return render_template("query_result.html", index=x)
 
