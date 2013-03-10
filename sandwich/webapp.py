@@ -68,7 +68,8 @@ def down_to_shared():
     ip = url[str.find(url,"//")+2 :  str.find(url,"/",8)]
     res = urllib.unquote(url[str.find(url,"/files/") + 6 : ])
     url = url[str.find(url, "/files/") : ]
-    return client.SandwichGetter.get_res(url, ip, res)
+    size = str(request.args.get("size"))
+    return client.SandwichGetter.get_res(url, ip, res, size)
 
 @app.route("/search", methods=["GET"])
 def search():

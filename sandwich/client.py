@@ -6,7 +6,7 @@ import os, sys
 class SandwichGetter(object):
 
     @classmethod
-    def get_res(cls, url, ip, res):
+    def get_res(cls, url, ip, res, size):
         conn = None
         try:
             conn = httplib.HTTPConnection(ip, timeout=config.timeout)
@@ -18,7 +18,7 @@ class SandwichGetter(object):
                 return ""
             else:
                 with open(fullpath, "wb") as f:
-                    files.stream_file(r1, f)
+                    files.stream_file(r1, f, size)
             return ""    
         except:
             print "Error while downloading file"
