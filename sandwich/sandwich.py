@@ -9,10 +9,10 @@ def run_all():
         client.SandwichGetter.bootstrap_into_network(config.neighbors[0])
 
     p1 = Process(target=indexer.find_files)
+    
+    p1.start()
 
     webapp.run()
-
-    p1.start()
 
     p1.join()
 
