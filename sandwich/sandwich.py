@@ -12,6 +12,8 @@ def run_all():
     
     p1.start()
 
+    file_monitor.start()
+
     webapp.run()
 
     p1.join()
