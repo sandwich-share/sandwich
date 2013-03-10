@@ -53,6 +53,13 @@ def files(filepath):
     return Response(download(), direct_passthrough=True)
 
 
+@app.route("/download", methods=["GET"])
+def download():
+    url = request.args.get("url")
+    ip = (url[:url.find(":")], url[url.find(":"),url.find("/")])
+    res = url[url.find("/"):]
+    client.SandwichGetter.get_res(self, ip, res)
+
 
 @app.route("/search", methods=["GET"])
 def search():

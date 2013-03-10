@@ -7,7 +7,7 @@ class SandwichGetter(object):
 
     @classmethod
     def get_res(cls, ip, res):
-
+        print "\n\nInside get_res function\n\n"
         conn = None
         try:
             conn = httplib.HTTPConnection(ip, timeout=config.timeout)
