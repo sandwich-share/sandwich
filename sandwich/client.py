@@ -1,30 +1,32 @@
-import httplib, json
+import httplib, json, urllib
 import config, files
 import socket
-
+import os, sys
 
 class SandwichGetter(object):
 
     @classmethod
-    def get_res(cls, ip, res):
-        print "\n\nInside get_res function\n\n"
+    def get_res(cls, url, ip, res):
         conn = None
         try:
             conn = httplib.HTTPConnection(ip, timeout=config.timeout)
-            conn.request("GET", res)
+            conn.request("GET", url)
             r1 = conn.getresponse()
-
-            fullpath = path.expanduser(config.shared_directory) + res
-            if path.exists(fullpath):
+            fullpath = os.path.expanduser(config.shared_directory) + res
+            if os.path.exists(fullpath):
                 print "Not overwriting existing file"
+                return ""
             else:
                 with open(fullpath, "wb") as f:
-                     files.stream_file(r1, f)
+                    files.stream_file(r1, f)
+            return ""    
         except:
             print "Error while downloading file"
+            print sys.exc_info()
 
         if conn != None:
             conn.close()
+        return ""
 
     @classmethod
     def get_many_res(cls, ip, reses):

@@ -54,12 +54,12 @@ def files(filepath):
 
 
 @app.route("/download", methods=["GET"])
-def download():
-    url = request.args.get("url")
-    ip = (url[:url.find(":")], url[url.find(":"),url.find("/")])
-    res = url[url.find("/"):]
-    client.SandwichGetter.get_res(self, ip, res)
-
+def down_to_shared():
+    url = str(request.args.get("url"))
+    ip = url[str.find(url,"//")+2 :  str.find(url,"/",8)]
+    res = urllib.unquote(url[str.find(url,"/files/") + 6 : ])
+    url = url[str.find(url, "/files/") : ]
+    return client.SandwichGetter.get_res(url, ip, res)
 
 @app.route("/search", methods=["GET"])
 def search():
