@@ -1,6 +1,6 @@
 from multiprocessing import Process, Queue
 
-import indexer, file_monitor, webapp, config, client
+import indexer, file_monitor, webapp, config, client, signal, async, sys
 
 def run_all():
 
@@ -16,6 +16,12 @@ def run_all():
 
     p1.join()
 
+def signal_handler(signal, frame):
+  print "\nStopping Server..."
+  async.event.stop_thread()
+  sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == "__main__":
     run_all()

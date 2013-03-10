@@ -1,13 +1,16 @@
-import threading, Queue
+import threading, Queue, sys
 
 
 class AsyncHandler(object):
 
     def __init__(self):
+        self.finished = threading.Event()
         self.semaphore = threading.Semaphore(0)
         self.events = Queue.Queue()
         self.thread = threading.Thread(target=self.event_handler)
+        self.thread.setDaemon(True)
         self.thread.start()
+
 
     def asynchronous_callback(self, f, args):
         self.events.put((f, args))
@@ -24,6 +27,9 @@ class AsyncHandler(object):
             # as passed into the queue
             e[0](e[1])
 
+    def stop_thread(self):
+        self.finished.set()
+        sys.exit(0) 
 
 # globally available async queue (per import)
 event = AsyncHandler()
