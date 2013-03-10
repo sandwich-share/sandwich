@@ -2,11 +2,13 @@
     <tr>
         <th>Path</th>
         <th>Filename</th>
+        <th>Download</th>
     </tr>
     {% for files in index %}
     <tr>
         <td>{{files[0]}}</td>
-        <td><a href="{{files[2]}}">{{files[1]}}</a></td>
+        <td><a href="{{files[2]}}" class="direct-link">{{files[1]}}</a></td>
+        <td><a href="#" data-url="{{files[2]}}" class="dl-link">Download</a></td>
     </tr>
     {% endfor %}
 </table>

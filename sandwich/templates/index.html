@@ -17,22 +17,27 @@
                 </div>
             </form>
         </div>
-        <div id="peer-list" class="container">
-          <table class='table'>
-            <tr>
-              <th>Peers</th>
-            </tr>
-            {% for peer in peers %}
-            <tr>
-              <td>
-                  <a href="#" data-host="{{peer}}">
-                  {{peer}}
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-        </div>
-        <div id="content" class="container">
+        <div id="everything" class="container">
+            <div class="row">
+                <div id="peer-list" class="span4">
+                    <table class='table'>
+                        <tr>
+                            <th>Peers</th>
+                        </tr>
+                        {% for peer in peers %}
+                        <tr>
+                            <td>
+                                <a href="#" data-host="{{peer}}">
+                                    {{peer}}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div id="content" class="span8">
+                </div>
+            </div>
         </div>
     </body>
 </html>

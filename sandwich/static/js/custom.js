@@ -13,4 +13,8 @@ $(document).ready(function(){
             $("#content").html(data);
         });
     })
+    $(".dl-link").on("click", function(e) {
+        e.preventDefault();
+        $.get("/download", {url: $(this).attr("data-url")});
+    })
 })
