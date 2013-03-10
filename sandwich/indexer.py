@@ -6,17 +6,16 @@ import config
 import sqlite3
 import json
 
-shared_directory = os.path.expanduser(config.shared_directory)
 db = "index.db"
 table = "local"
 
 # crawl a directory and find all files and folders
 def find_files():
     index = []
-    for path, dirs, files in os.walk(shared_directory):
+    for path, dirs, files in os.walk(config.shared_directory):
         for f in files:
             if not f.startswith('.') and (not os.path.split(path)[1].startswith('.') or path == "."+os.sep or path == '.'):
-              index.append((os.path.relpath(path, shared_directory), f))
+                index.append((os.path.relpath(path, config.shared_directory), f, os.path.getsize(os.path.join(path,f))))
     try:
         os.remove(db)
     except:
@@ -27,8 +26,8 @@ def find_files():
     try:
         con = sqlite3.connect(db)
         cursor = con.cursor()
-        cursor.execute('''CREATE TABLE ''' + table + ''' (path text, filename text)''')
-        cursor.executemany("INSERT INTO " + table + "  VALUES (?,?)", index)
+        cursor.execute('''CREATE TABLE ''' + table + ''' (path text, filename text, size int)''')
+        cursor.executemany("INSERT INTO " + table + "  VALUES (?,?,?)", index)
         con.commit()
     except:
         for m in sys.exc_info():
@@ -37,12 +36,12 @@ def find_files():
         con.close()
 
 # add a file and folder to the index
-def add_file(path, filename):
+def add_file(path, filename, size):
     try:
         con = sqlite3.connect(db)
         cursor = con.cursor()
-        cmd = "INSERT INTO " + table + " VALUES (?,?)"
-        cursor.execute(cmd, (path, filename))
+        cmd = "INSERT INTO " + table + " VALUES (?,?,?)"
+        cursor.execute(cmd, (path, filename, size))
         con.commit()
     except:
         for m in sys.exc_info():
