@@ -83,7 +83,7 @@ def search(search_param, ip_address):
         cursor = con.cursor()
         cmd = "SELECT * FROM " + table + " WHERE path LIKE ? OR filename LIKE ?"
         results = []
-        search = '%' + str.replace(search_param, ' ', '%') + '%'
+        search = '%' + str.replace(search_param, '+', '%') + '%'
         for res in cursor.execute(cmd, (search, search)):
             results.append(res + ('http://' + ip_address + ":" + str(config.webapp) + '/files/' + str.replace(str(urllib.quote(res[0])) + '/', './', '') + urllib.quote(res[1]),))
         return json.dumps(results)
